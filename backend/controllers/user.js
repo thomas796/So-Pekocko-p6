@@ -3,11 +3,15 @@ const jwt = require('jsonwebtoken');
 
 // Import du modèle de l'utilisateur
 const User = require('../models/user');
-
-// Sign In
+const validator = require("email-validator");
+ 
+ 
+// Sign up
 exports.signup = (req, res, next) => {
-    bcrypt.hash(req.body.password, 10)
-      .then(hash => {
+
+   if (validator.validate(req.body.email)) {
+
+    bcrypt.hash(req.body.password, 10).then(hash => {
         const user = new User({
           email: req.body.email,
           password: hash
@@ -16,10 +20,15 @@ exports.signup = (req, res, next) => {
           .then(() => res.status(201).json({ message: 'Utilisateur créé avec succès !' }))
           .catch(error => res.status(400).json({ error }));
       })
-      .catch(error => res.status(500).json({ error }));
-  };
+      .catch(error => res.status(500).json({ error }))
+   } else {
+     const error = 'invalide email';
+    res.status(600).json({ error })
+  }
+  }
+  
 
-// Sign Up
+// Sign In
   exports.login = (req, res, next) => {
     User.findOne({ email: req.body.email })
       .then(user => {

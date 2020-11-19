@@ -2,8 +2,10 @@ const express = require('express');
 const bodyParser = require ('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
+var helmet = require('helmet')
 
 const app = express();
+app.use(helmet())
 
 const sauceRoutes = require('./routes/sauces');
 const userRoutes = require('./routes/user');
