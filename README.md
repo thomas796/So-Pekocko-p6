@@ -1,1 +1,1 @@
-# sopekocko
+# So-Pekocko-p6
