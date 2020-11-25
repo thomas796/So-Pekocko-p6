@@ -41,3 +41,14 @@ app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
 
 module.exports = app;
+
+
+
+//condition mdp
+//procédure d'installation pour lancer le projet à faire dans le read me
+// XSS-Clean
+//faille SQL c'est moogoose qui me protège de ça. Moogoose va éviter de faire entrer des failles SQL
+//password validator
+
+
+

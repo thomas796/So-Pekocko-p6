@@ -4,7 +4,7 @@ require("dotenv").config();
 
 const PORT = process.env.PORT;
 
-
+//on configure les port
 const normalizePort = val => {
   const port = parseInt(val, 10);
 
