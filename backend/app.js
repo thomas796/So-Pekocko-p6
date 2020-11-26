@@ -2,15 +2,27 @@ const express = require('express');
 const bodyParser = require ('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
-var helmet = require('helmet')
+const helmet = require('helmet')
+const xss = require('xss-clean')
+const rateLimit = require("express-rate-limit");
 
-const app = express();
+const app = express()
 app.use(helmet())
+app.use(xss())
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100 
+});
+ 
+app.use(limiter);
 
 const sauceRoutes = require('./routes/sauces');
 const userRoutes = require('./routes/user');
 
 // Connection a la Base de Donnée MongoDB et cryptage des données grâce à DOTENV package.
+//Le RGPD garantit la confidentialité des données pour les résidents de l'UE.
+
 require("dotenv").config();
 const ID = process.env.ID;
 const MDP = process.env.MDP;
@@ -42,13 +54,36 @@ app.use('/api/auth', userRoutes);
 
 module.exports = app;
 
+//express-rate-limit
 
 
-//condition mdp
-//procédure d'installation pour lancer le projet à faire dans le read me
-// XSS-Clean
-//faille SQL c'est moogoose qui me protège de ça. Moogoose va éviter de faire entrer des failles SQL
-//password validator
+//OWASP
+
+// La confidentialité
+// l’intégrité 
+// La disponibilité
+
+// 1. injection mySQL
+// noSQL de mongoDb ne permet pas les injections de sql
+
+// 2. piratage de session
+// authentification
+// mot de passe fort avec validation password
+// token JWT
+
+// 3. protégez les données en transit
+// Cross-Origin Resource Sharing (CORS).
+// Les requêtes GET et POST sera autorisée que si elle a la même origine donc ça signifie qu'elle doit avoir les mêmes nom de domaine, port, hôtes et schémas. 
+
+// 4. protégez les données stockées sur une application
+// système de hashage avec bcrypt pour cacher les données sensibles comme le mdp
+
+// 5. faille XSS : pour éviter d'ajouter du contenu dans une page
+// HELMET pour les cookies et XSS-Clean
+// Comment puis-je éviter cette attaque de cookie ?
+// Une option consiste à ajouter un flag  HttpOnly à vos cookies. Ce flag permet d’empêcher un script d'accéder aux cookies. 
+
+
 
 
 
